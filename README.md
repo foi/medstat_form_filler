@@ -9,6 +9,7 @@ Sub InsertBookmarks()
     Dim dataArray() As String
     Dim ArrayOfStringsSize As Integer
     Dim BookmarkLength As Integer
+    Dim ParsedArray()
     BookmarkLength = 12
     
     sPath = "c:\medstat\" & "Test.txt"
@@ -17,9 +18,11 @@ Sub InsertBookmarks()
         dataArray = Split(Input$(LOF(1), #1), vbLf)
     Close #1
     ArrayOfStringsSize = UBound(dataArray())
+    ReDim Preserve ParsedArray(0 To ArrayOfStringsSize, 0 To 1)
     'Dim ParsedArray(,) As String, strings() As String
     For i = 0 To ArrayOfStringsSize
         Debug.Print dataArray(0)
     Next i
+    'MsgBox UBound(ParsedArray)
 End Sub
 ```

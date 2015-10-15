@@ -14,7 +14,7 @@ Function ParseTestTxtIntoArray(PathToTestTxt As String)
     Dim StringLength As Integer
     Dim ParsedArray()
     BookmarkLength = 12
-    
+
     sPath = PathToTestTxt & "\Test.txt"
     'Parse txt to array of strings
     Open sPath For Input As #1
@@ -40,7 +40,7 @@ Sub Main()
     Application.ScreenUpdating = False
     ParsedArray = ParseTestTxtIntoArray(ThisDocument.Path)
     'Insert bookmark trough array
-    For k = 0 To UBound(ParsedArray) - 1
+    For k = 0 To UBound(ParsedArray)
         Selection.Find.ClearFormatting
         Selection.Find.Font.Color = wdColorRed
          With Selection.Find
@@ -58,9 +58,25 @@ Sub Main()
     Selection.Find.Execute Replace:=wdReplaceOne
     With ActiveDocument.Bookmarks
         .Add Range:=Selection.Range, Name:=ParsedArray(k, 0)
-        .DefaultSorting = wdSortByName
-        .ShowHidden = False
+        '.DefaultSorting = wdSortByName
+        '.ShowHidden = False
     End With
     Next k
+End Sub
+
+'Insert Values Into Bookmarks
+Sub InsertValuesIntoBookmarks()
+    Dim ParsedArray()
+    Dim BMRange As Range
+    Application.ScreenUpdating = False
+    ParsedArray = ParseTestTxtIntoArray(ThisDocument.Path)
+    For i = 0 To UBound(ParsedArray)
+        If ActiveDocument.Bookmarks.Exists(ParsedArray(i, 0)) = True Then
+            'Debug.Print ParsedArray(i, 0)
+            Set BMRange = ActiveDocument.Bookmarks(ParsedArray(i, 0)).Range
+            Debug.Print BMRange.Text
+            BMRange.Text = ParsedArray(i, 1)
+        End If
+    Next i
 End Sub
 ```

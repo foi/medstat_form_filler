@@ -4,9 +4,8 @@
 Пизда
 
 ```
-
-Sub InsertBookmarks()
-    Application.ScreenUpdating = False
+'Parse Test.txt into two dimensional array
+Function ParseTestTxtIntoArray(PathToTestTxt As String)
     Dim sPath As String
     Dim dataArray() As String
     Dim ArrayOfStringsSize As Integer
@@ -16,7 +15,7 @@ Sub InsertBookmarks()
     Dim ParsedArray()
     BookmarkLength = 12
     
-    sPath = "c:\medstat\" & "Test.txt"
+    sPath = PathToTestTxt & "\Test.txt"
     'Parse txt to array of strings
     Open sPath For Input As #1
         dataArray = Split(Input$(LOF(1), #1), vbLf)
@@ -32,8 +31,16 @@ Sub InsertBookmarks()
         ParsedArray(ParsedArrayIndex, 1) = Trim(Mid(dataArray(ParsedArrayIndex), 13, StringLength - 12))
         ParsedArrayIndex = ParsedArrayIndex + 1
     Next i
+    ParseTestTxtIntoArray = ParsedArray()
+End Function
+
+'Function that open Test.txt and parse test into array and insert bookmarks
+Sub Main()
+    Dim ParsedArray()
+    Application.ScreenUpdating = False
+    ParsedArray = ParseTestTxtIntoArray(ThisDocument.Path)
     'Insert bookmark trough array
-    For k = 0 To ArrayOfStringsSize - 1
+    For k = 0 To UBound(ParsedArray) - 1
         Selection.Find.ClearFormatting
         Selection.Find.Font.Color = wdColorRed
          With Selection.Find
@@ -55,7 +62,5 @@ Sub InsertBookmarks()
         .ShowHidden = False
     End With
     Next k
-    
-    'MsgBox ParsedArray(0, 0)
 End Sub
 ```

@@ -9,6 +9,7 @@ Sub InsertBookmarks()
     Dim dataArray() As String
     Dim ArrayOfStringsSize As Integer
     Dim BookmarkLength As Integer
+    Dim ParsedArrayIndex As Integer
     Dim ParsedArray()
     BookmarkLength = 12
     
@@ -20,9 +21,12 @@ Sub InsertBookmarks()
     ArrayOfStringsSize = UBound(dataArray())
     ReDim Preserve ParsedArray(0 To ArrayOfStringsSize, 0 To 1)
     'Dim ParsedArray(,) As String, strings() As String
+    ParsedArrayIndex = 0
     For i = 0 To ArrayOfStringsSize
-        Debug.Print dataArray(0)
+        ParsedArray(ParsedArrayIndex, 0) = Left(dataArray(ParsedArrayIndex), 12)
+        ParsedArray(ParsedArrayIndex, 1) = "0"
+        ParsedArrayIndex = ParsedArrayIndex + 1
     Next i
-    'MsgBox UBound(ParsedArray)
+    MsgBox ParsedArray(200, 0)
 End Sub
 ```

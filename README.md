@@ -4,6 +4,7 @@
 Пизда
 
 ```
+
 Sub InsertBookmarks()
     Application.ScreenUpdating = False
     Dim sPath As String
@@ -48,8 +49,13 @@ Sub InsertBookmarks()
         .MatchAllWordForms = False
     End With
     Selection.Find.Execute Replace:=wdReplaceOne
+    With ActiveDocument.Bookmarks
+        .Add Range:=Selection.Range, Name:=ParsedArray(k, 0)
+        .DefaultSorting = wdSortByName
+        .ShowHidden = False
+    End With
     Next k
-    MsgBox ParsedArray(0, 0)
+    
+    'MsgBox ParsedArray(0, 0)
 End Sub
-
 ```

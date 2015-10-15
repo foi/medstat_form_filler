@@ -5,7 +5,7 @@
 
 ```
 Sub InsertBookmarks()
-    Application.ScreenUpdating = True
+    Application.ScreenUpdating = False
     Dim sPath As String
     Dim dataArray() As String
     Dim ArrayOfStringsSize As Integer
@@ -49,9 +49,7 @@ Sub InsertBookmarks()
     End With
     Selection.Find.Execute Replace:=wdReplaceOne
     Next k
-    Selection.EndKey Unit:=wdLine, Extend:=wdExtend
-    Selection.Font.Color = wdColorAutomatic
-    Selection.Delete Unit:=wdCharacter, Count:=1
     MsgBox ParsedArray(0, 0)
 End Sub
+
 ```

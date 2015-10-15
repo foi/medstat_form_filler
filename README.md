@@ -13,6 +13,7 @@ Function ParseTestTxtIntoArray(PathToTestTxt As String)
     Dim ParsedArrayIndex As Integer
     Dim StringLength As Integer
     Dim ParsedArray()
+    
     BookmarkLength = 12
 
     sPath = PathToTestTxt & "\Test.txt"
@@ -40,7 +41,6 @@ Sub Main()
     Application.ScreenUpdating = False
     ParsedArray = ParseTestTxtIntoArray(ThisDocument.Path)
     'Insert bookmark trough array
-    Selection.HomeKey Unit:=wdStory
     For k = 0 To UBound(ParsedArray)
         Selection.Find.ClearFormatting
         Selection.Find.Font.Color = wdColorRed
@@ -76,10 +76,11 @@ Sub InsertValuesIntoBookmarks()
     For i = 0 To UBound(ParsedArray)
         If ActiveDocument.Bookmarks.Exists(ParsedArray(i, 0)) = True Then
             'Debug.Print ParsedArray(i, 0)
-            'Set BMRange = ActiveDocument.Bookmarks(ParsedArray(i, 0)).Range
+            Set BMRange = ActiveDocument.Bookmarks(ParsedArray(i, 0)).Range
             'Debug.Print BMRange.Text
-            'BMRange.Text = ParsedArray(i, 1)
-             UpdateBookmark CStr(ParsedArray(i, 0)), CStr(ParsedArray(i, 1))
+            BMRange.Text = ""
+            BMRange.Text = ParsedArray(i, 1)
+            UpdateBookmark CStr(ParsedArray(i, 0)), CStr(Left(ParsedArray(i, 1), Len(ParsedArray(i, 1)) - 1))
         End If
     Next i
 End Sub
@@ -88,7 +89,7 @@ End Sub
 Sub UpdateBookmark(BookmarkToUpdate As String, TextToUse As String)
     Dim BMRange As Range
     Set BMRange = ActiveDocument.Bookmarks(BookmarkToUpdate).Range
-    BMRange.Text = TextToUse
+    BMRange.Text = Replace(TextToUse, Chr(13), "")
     ActiveDocument.Bookmarks.Add BookmarkToUpdate, BMRange
 End Sub
 ```

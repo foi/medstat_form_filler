@@ -40,6 +40,7 @@ Sub Main()
     Application.ScreenUpdating = False
     ParsedArray = ParseTestTxtIntoArray(ThisDocument.Path)
     'Insert bookmark trough array
+    Selection.HomeKey Unit:=wdStory
     For k = 0 To UBound(ParsedArray)
         Selection.Find.ClearFormatting
         Selection.Find.Font.Color = wdColorRed
@@ -56,6 +57,8 @@ Sub Main()
         .MatchAllWordForms = False
     End With
     Selection.Find.Execute Replace:=wdReplaceOne
+    Selection.EndKey Unit:=wdLine, Extend:=wdExtend
+    Selection.Font.Color = wdColorAutomatic
     With ActiveDocument.Bookmarks
         .Add Range:=Selection.Range, Name:=ParsedArray(k, 0)
         '.DefaultSorting = wdSortByName
@@ -73,10 +76,19 @@ Sub InsertValuesIntoBookmarks()
     For i = 0 To UBound(ParsedArray)
         If ActiveDocument.Bookmarks.Exists(ParsedArray(i, 0)) = True Then
             'Debug.Print ParsedArray(i, 0)
-            Set BMRange = ActiveDocument.Bookmarks(ParsedArray(i, 0)).Range
-            Debug.Print BMRange.Text
-            BMRange.Text = ParsedArray(i, 1)
+            'Set BMRange = ActiveDocument.Bookmarks(ParsedArray(i, 0)).Range
+            'Debug.Print BMRange.Text
+            'BMRange.Text = ParsedArray(i, 1)
+             UpdateBookmark CStr(ParsedArray(i, 0)), CStr(ParsedArray(i, 1))
         End If
     Next i
+End Sub
+
+'http://word.mvps.org/faqs/macrosvba/InsertingTextAtBookmark.htm
+Sub UpdateBookmark(BookmarkToUpdate As String, TextToUse As String)
+    Dim BMRange As Range
+    Set BMRange = ActiveDocument.Bookmarks(BookmarkToUpdate).Range
+    BMRange.Text = TextToUse
+    ActiveDocument.Bookmarks.Add BookmarkToUpdate, BMRange
 End Sub
 ```

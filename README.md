@@ -13,9 +13,7 @@ Function ParseTestTxtIntoArray(PathToTestTxt As String)
     Dim ParsedArrayIndex As Integer
     Dim StringLength As Integer
     Dim ParsedArray()
-    
     BookmarkLength = 12
-
     sPath = PathToTestTxt & "\Test.txt"
     'Parse txt to array of strings
     Open sPath For Input As #1
@@ -23,7 +21,6 @@ Function ParseTestTxtIntoArray(PathToTestTxt As String)
     Close #1
     ArrayOfStringsSize = UBound(dataArray())
     ReDim Preserve ParsedArray(0 To ArrayOfStringsSize - 1, 0 To 1)
-    'Dim ParsedArray(,) As String, strings() As String
     ParsedArrayIndex = 0
     'Parse string into Two-Dimensional Array
     For i = 0 To ArrayOfStringsSize - 1
@@ -40,29 +37,18 @@ Sub Main()
     Dim ParsedArray()
     Application.ScreenUpdating = False
     ParsedArray = ParseTestTxtIntoArray(ThisDocument.Path)
-    'Insert bookmark trough array
-    For k = 0 To UBound(ParsedArray)
+    'Insert bookmark trough array, from 2 - because 0 & 1 is useless
+    For k = 2 To UBound(ParsedArray)
         Selection.Find.ClearFormatting
         Selection.Find.Font.Color = wdColorRed
-         With Selection.Find
-        .Text = ""
-        .Replacement.Text = ParsedArray(k, 0)
-        .Forward = True
-        .Wrap = wdFindContinue
-        .Format = True
-        .MatchCase = False
-        .MatchWholeWord = False
-        .MatchWildcards = False
-        .MatchSoundsLike = False
-        .MatchAllWordForms = False
+        With Selection.Find
+        .Text = "": .Replacement.Text = ParsedArray(k, 0): .Forward = True: .Wrap = wdFindContinue: .Format = True: .MatchCase = False: .MatchWholeWord = False: .MatchWildcards = False: .MatchSoundsLike = False: .MatchAllWordForms = False
     End With
     Selection.Find.Execute Replace:=wdReplaceOne
     Selection.EndKey Unit:=wdLine, Extend:=wdExtend
     Selection.Font.Color = wdColorAutomatic
     With ActiveDocument.Bookmarks
         .Add Range:=Selection.Range, Name:=ParsedArray(k, 0)
-        '.DefaultSorting = wdSortByName
-        '.ShowHidden = False
     End With
     Next k
 End Sub
@@ -70,17 +56,12 @@ End Sub
 'Insert Values Into Bookmarks
 Sub InsertValuesIntoBookmarks()
     Dim ParsedArray()
-    Dim BMRange As Range
     Application.ScreenUpdating = False
     ParsedArray = ParseTestTxtIntoArray(ThisDocument.Path)
-    For i = 0 To UBound(ParsedArray)
+    'from 2 - because 0 & 1 is useless
+    For i = 2 To UBound(ParsedArray)
         If ActiveDocument.Bookmarks.Exists(ParsedArray(i, 0)) = True Then
-            'Debug.Print ParsedArray(i, 0)
-            Set BMRange = ActiveDocument.Bookmarks(ParsedArray(i, 0)).Range
-            'Debug.Print BMRange.Text
-            BMRange.Text = ""
-            BMRange.Text = ParsedArray(i, 1)
-            UpdateBookmark CStr(ParsedArray(i, 0)), CStr(Left(ParsedArray(i, 1), Len(ParsedArray(i, 1)) - 1))
+            UpdateBookmark CStr(ParsedArray(i, 0)), CStr(ParsedArray(i, 1))
         End If
     Next i
 End Sub

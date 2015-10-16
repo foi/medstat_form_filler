@@ -73,4 +73,15 @@ Sub UpdateBookmark(BookmarkToUpdate As String, TextToUse As String)
     BMRange.Text = Replace(TextToUse, Chr(13), "")
     ActiveDocument.Bookmarks.Add BookmarkToUpdate, BMRange
 End Sub
+
+'https://support.microsoft.com/en-us/kb/184041
+Sub StripAllBookmarks()
+    Dim stBookmark As Bookmark
+    ActiveDocument.Bookmarks.ShowHidden = True
+    If ActiveDocument.Bookmarks.Count >= 1 Then
+       For Each stBookmark In ActiveDocument.Bookmarks
+          stBookmark.Delete
+       Next stBookmark
+    End If
+End Sub
 ```

@@ -58,8 +58,8 @@ Sub InsertValuesIntoBookmarks()
     Dim ParsedArray()
     Application.ScreenUpdating = False
     ParsedArray = ParseTestTxtIntoArray(ThisDocument.Path)
-    'from 2 - because 0 & 1 is useless
-    For i = 2 To UBound(ParsedArray)
+    'from 0 
+    For i = 0 To UBound(ParsedArray)
         If ActiveDocument.Bookmarks.Exists(ParsedArray(i, 0)) = True Then
             UpdateBookmark CStr(ParsedArray(i, 0)), CStr(ParsedArray(i, 1))
         End If

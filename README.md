@@ -32,8 +32,21 @@ Function ParseTestTxtIntoArray(PathToTestTxt As String)
     ParseTestTxtIntoArray = ParsedArray()
 End Function
 
+'Insert Values Into Bookmarks
+Sub ЗаполнитьФормыЗначениями()
+    Dim ParsedArray()
+    Application.ScreenUpdating = False
+    ParsedArray = ParseTestTxtIntoArray(ThisDocument.Path)
+    'from 0
+    For i = 0 To UBound(ParsedArray)
+        If ActiveDocument.Bookmarks.Exists(ParsedArray(i, 0)) = True Then
+            ВставитьВЗакладкуЗначение CStr(ParsedArray(i, 0)), CStr(ParsedArray(i, 1))
+        End If
+    Next i
+End Sub
+
 'Function that open Test.txt and parse test into array and insert bookmarks
-Sub Main()
+Sub ОСТОРОЖНОЗаполнитьФормыЗакладками()
     Dim ParsedArray()
     Application.ScreenUpdating = False
     ParsedArray = ParseTestTxtIntoArray(ThisDocument.Path)
@@ -53,29 +66,15 @@ Sub Main()
     Next k
 End Sub
 
-'Insert Values Into Bookmarks
-Sub InsertValuesIntoBookmarks()
-    Dim ParsedArray()
-    Application.ScreenUpdating = False
-    ParsedArray = ParseTestTxtIntoArray(ThisDocument.Path)
-    'from 0 
-    For i = 0 To UBound(ParsedArray)
-        If ActiveDocument.Bookmarks.Exists(ParsedArray(i, 0)) = True Then
-            UpdateBookmark CStr(ParsedArray(i, 0)), CStr(ParsedArray(i, 1))
-        End If
-    Next i
-End Sub
-
 'http://word.mvps.org/faqs/macrosvba/InsertingTextAtBookmark.htm
-Sub UpdateBookmark(BookmarkToUpdate As String, TextToUse As String)
+Sub ВставитьВЗакладкуЗначение(BookmarkToUpdate As String, TextToUse As String)
     Dim BMRange As Range
     Set BMRange = ActiveDocument.Bookmarks(BookmarkToUpdate).Range
     BMRange.Text = Replace(TextToUse, Chr(13), "")
     ActiveDocument.Bookmarks.Add BookmarkToUpdate, BMRange
 End Sub
-
 'https://support.microsoft.com/en-us/kb/184041
-Sub StripAllBookmarks()
+Sub ОСТОРОЖНОУдалитьВсеЗакладки()
     Dim stBookmark As Bookmark
     ActiveDocument.Bookmarks.ShowHidden = True
     If ActiveDocument.Bookmarks.Count >= 1 Then
@@ -84,6 +83,27 @@ Sub StripAllBookmarks()
        Next stBookmark
     End If
 End Sub
+'Удалить все значения ссылок полей местата, что написаны в значениях закладок
+Sub ОСТОРОЖНОУдалитьТекстВсехЗакладок()
+    Dim stBookmark As Bookmark
+    ActiveDocument.Bookmarks.ShowHidden = True
+    If ActiveDocument.Bookmarks.Count >= 1 Then
+       For Each stBookmark In ActiveDocument.Bookmarks
+          ActiveDocument.Bookmarks(stBookmark).Range.Text = ""
+       Next stBookmark
+    End If
+End Sub
+'Снова вставить название закладки в текст закладки
+Sub ОСТОРОЖНОПросмотретьВсеЗакладки()
+    Dim stBookmark As Bookmark
+    ActiveDocument.Bookmarks.ShowHidden = True
+    If ActiveDocument.Bookmarks.Count >= 1 Then
+       For Each stBookmark In ActiveDocument.Bookmarks
+          ActiveDocument.Bookmarks(stBookmark).Range.Text = stBookmark
+       Next stBookmark
+    End If
+End Sub
+
 ```
 
 # Руководство для прогеров для работы с медстат

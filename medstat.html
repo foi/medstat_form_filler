@@ -6,8 +6,10 @@
   </head>
   <body>
     <h3>Формирование сокращений</h3>
-    <input type="checkbox" id="checkbox" v-model="replace">
-    <label for="checkbox">Заменять сокращениями?</label>
+    <input type="checkbox" id="replace-checkbox" v-model="replace">
+    <label for="replace-checkbox">Заменять сокращениями?</label>
+    <input type="checkbox" id="shrink-checkbox" v-model="shrink">
+    <label for="shrink-checkbox">обрезать строки до 25 символов?</label>
     <h4>Оригинальные данные</h4>
     <textarea name="origin" rows="15" cols="120" id="origin" v-model="original"></textarea>
     <br>
@@ -170,6 +172,7 @@ if(!this.invalid){var e=this.arg;this.arg?this.handleSingle(e,t):this.handleObje
         original: "",
         result: "",
         replace: false,
+        shrink: false,
         dictionary: {
           "числа ": "чсл.",
           "пациентов": "пациент-в",
@@ -315,10 +318,17 @@ if(!this.invalid){var e=this.arg;this.arg?this.handleSingle(e,t):this.handleObje
                 }
               })
             }
+
+            // если обрезать до 25 символов
+            if (this.shrink) {
+              var _number = tmp.slice(0, 12)
+              var _text = tmp.slice(12, 12 + 24)
+              tmp = _number + _text
+            }
             var stringSize = _.size(tmp)
             // console.log(tmp, stringSize)
             var stringWithYear
-            //console.log('tmp string size \n', _.size(tmp))
+            console.log('tmp string size \n', _.size(tmp), 'tmp \n', tmp)
             if (stringSize === stringLimit) {
               stringWithYear = tmp.slice(0, stringLimit - 2) + year
             }
@@ -326,7 +336,7 @@ if(!this.invalid){var e=this.arg;this.arg?this.handleSingle(e,t):this.handleObje
               let t = _.padEnd(tmp, (stringLimit - 2), " ")
               console.log("t \n", t)
               stringWithYear = t + year
-              // console.log('string', tmp, 'string with year', stringWithYear, 'stringWithYear size', _.size(stringWithYear))
+              console.log('string', tmp, 'string with year', stringWithYear, 'stringWithYear size', _.size(stringWithYear))
             }
             console.log('string with year \n', stringWithYear, "string with year size \n", _.size(stringWithYear))
             resultArray.push(stringWithYear)
